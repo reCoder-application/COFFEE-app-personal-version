@@ -1,10 +1,12 @@
 const saveBtn = document.getElementById('btn-save');
-const list = document.getElementById('card-area');
+const cardArea = document.getElementById('card-area');
 
 const addBtn = document.getElementById('add-btn');
 const cancelBtn = document.getElementById('btn-cancel');
+const editBtn = document.getElementById('edit-btn')
 const homePage = document.getElementById('home-page');
 const addPage = document.getElementById('add-page');
+const editPage = document.getElementById('edit-Page')
 
 // コーヒーの記録を保存するためのリスト
 let coffeeLogs = [];
@@ -20,9 +22,15 @@ addBtn.addEventListener('click', function() {
 
 //　入力のキャンセルボタンを押したら、ホーム画面に遷移する
 cancelBtn.addEventListener('click', function() {
-    addPage.classList.add('hidden')
+    addPage.classList.add('hidden');
     homePage.classList.remove('hidden');
 })
+
+editBtn.addEventListener('click', function() {
+    homePage.classList.add('hidden');
+    editPage.classList.remove('hidden')
+})
+
 
 const slidersIds = ['acidity', 'bitterness', 'richness', 'sweetness', 'aromaStrength'];
 
@@ -169,7 +177,7 @@ function renderCard(log) {
 
     // 画面に追加する
     // list(card-area)の一番上に新しいカードを追加する
-    list.insertAdjacentHTML('afterbegin', cardHtml);
+    cardArea.insertAdjacentHTML('afterbegin', cardHtml);
 
     // レーダーチャートを作成
     const ctx = document.getElementById(`chart-${log.id}`).getContext('2d');
@@ -236,13 +244,13 @@ function renderCard(log) {
 
 
 // 親エリア(list)にクリックイベントを仕掛ける
-list.addEventListener('click', function(e) {
+cardArea.addEventListener('click', function(e) {
 
     // クリックされたものが削除ボタンか、いいねボタンかを確認する
     // 対象のHTMLタグのオブジェクトが渡される
     const deletBtn = e.target.closest('.delete-btn');
     const likeBtn  = e.target.closest('.like-btn');
-
+    const editBtn  = e.target.closest('.edit-btn');
     if (deletBtn){
         const result = window.confirm("本当に削除しますか？");
         if(result === true) {
@@ -314,7 +322,6 @@ list.addEventListener('click', function(e) {
     console.log("編集開始!")
     
 
-    
     }
 })
 
