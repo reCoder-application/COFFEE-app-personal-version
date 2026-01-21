@@ -3,11 +3,10 @@ const cardArea = document.getElementById('card-area');
 
 const addBtn = document.getElementById('add-btn');
 const cancelBtn = document.getElementById('btn-cancel');
-const editBtn = document.getElementById('edit-btn')
+const editBtn = document.getElementById('edit-btn');
+
 const homePage = document.getElementById('home-page');
 const addPage = document.getElementById('add-page');
-const editPage = document.getElementById('edit-Page')
-
 // コーヒーの記録を保存するためのリスト
 let coffeeLogs = [];
 // 編集中のデータを管理するための変数
@@ -24,11 +23,6 @@ addBtn.addEventListener('click', function() {
 cancelBtn.addEventListener('click', function() {
     addPage.classList.add('hidden');
     homePage.classList.remove('hidden');
-})
-
-editBtn.addEventListener('click', function() {
-    homePage.classList.add('hidden');
-    editPage.classList.remove('hidden')
 })
 
 
@@ -92,8 +86,23 @@ saveBtn.addEventListener('click', function() {
     };
 
     // pushで配列にデータを追加
-    coffeeLogs.push(log);
+    if(editingId){
+        const index = coffeeLogs.findIndex(log => log.id === editingId); // editingIdと一致するIDを持つlogを探して、そのindexを取得
+        log.id = editingId; // 既存のIDを使う
+        log.likes = coffeeLogs[index].likes; // いいね数を保持する
+        coffeeLogs[index] = log; // 編集した内容のlogで更新する
 
+        const oldCard = document.querySelector(`[data-id="${editingId}"]`).closest('.glass-card');
+        // カスタムデータ属性である"data-id"で編集対象のカードを特定し、
+        if(oldCard){
+            oldCard.remove();
+        }
+
+        editingId = null;
+        
+    } else {
+    coffeeLogs.push(log);
+    }
     // ブラウザにデータを保存(localStrage: ブラウザに備わっている簡易的なデータベース)
     // localStrageは「文字」しか保存できないため
     // JSON.stringifyでオブジェクトを文字列に変換してから保存している
@@ -111,7 +120,7 @@ saveBtn.addEventListener('click', function() {
     document.getElementById('dripper').value = "";
     document.getElementById('shop').value = "";
 
-    addPage.classList.add('hidden')
+    addPage.classList.add('hidden');
     homePage.classList.remove('hidden');
 
 }, false);
@@ -251,6 +260,7 @@ cardArea.addEventListener('click', function(e) {
     const deletBtn = e.target.closest('.delete-btn');
     const likeBtn  = e.target.closest('.like-btn');
     const editBtn  = e.target.closest('.edit-btn');
+
     if (deletBtn){
         const result = window.confirm("本当に削除しますか？");
         if(result === true) {
@@ -288,7 +298,7 @@ cardArea.addEventListener('click', function(e) {
         // まだ「いいね」してないか判定 (activeクラスを持ってるか？)
         // likeBtn変数が持つクラスのリストに'active'というクラスが入っているかどうかを確認
         // likeBtn.classList: action-btn like-btn
-        if ( !likeBtn.classList.contains('active')) {
+        if (!likeBtn.classList.contains('active')) {
             // まだいいねしていない場合:"active"クラスを追加して、CSSスタイルを適用できるようにする
             likeBtn.classList.add('active');
             count ++;
@@ -306,6 +316,7 @@ cardArea.addEventListener('click', function(e) {
         /*「logのid(log.id)」と「今取得したlikeId」が等しいデータを1つ見つけてほしい。
         　　見つけたら、targetLogという変数に入れる*/
         const targetLog = coffeeLogs.find(log => log.id === likeId);
+
         if(targetLog) {
             targetLog.likes = count;
         }
@@ -313,15 +324,50 @@ cardArea.addEventListener('click', function(e) {
         localStorage.setItem('coffeeLogs', JSON.stringify(coffeeLogs));
 
         console.log('保存完了！ ID:' + likeId + ' のいいね数:' + count);
-
     }
+
     else if(editBtn){
     // ここに編集ボタンが押されたときの処理を書く
     // ヒント: editBtn.dataset.id でIDを取得できます
     // ヒント: editCard()という関数を呼び出す
-    console.log("編集開始!")
-    
 
+        // 編集したいデータのidを取得
+        const targetId = Number(editBtn.dataset.id);
+
+        // 配列から指定したidのデータを見つけて、取り出す
+        const targetLog = coffeeLogs.find(log => log.id === targetId);
+        if(!targetLog){
+            return;
+        }
+
+        // フォームにデータを設定
+        document.getElementById('product-name').value = targetLog.productName;
+        document.getElementById('country').value = targetLog.country;
+        document.getElementById('farm').value = targetLog.farm;
+        document.getElementById('variety').value = targetLog.variety;
+        document.getElementById('aroma').value = targetLog.aroma;
+        document.getElementById('process').value = targetLog.process;
+        document.getElementById('dripper').value = targetLog.dripper;
+        document.getElementById('shop').value = targetLog.shop;
+
+        // スライダーの値と表示を設定
+        document.getElementById('acidity').value = targetLog.flavor.acidity;
+        document.getElementById('bitterness').value = targetLog.flavor.bitterness;
+        document.getElementById('richness').value = targetLog.flavor.richness;
+        document.getElementById('sweetness').value = targetLog.flavor.sweetness;
+        document.getElementById('aromaStrength').value = targetLog.flavor.aromaStrength;
+
+        // スライダーの数値の表示
+        document.getElementById('acidity-value').textContent = targetLog.flavor.acidity;
+        document.getElementById('bitterness-value').textContent = targetLog.flavor.bitterness;
+        document.getElementById('richness-value').textContent = targetLog.flavor.richness;
+        document.getElementById('sweetness-value').textContent = targetLog.flavor.sweetness;
+        document.getElementById('aromaStrength-value').textContent = targetLog.flavor.aromaStrength;
+
+        editingId = targetId; // 今現在、編集中なのか、新規追加のデータを入力中なのかを判定する変数
+
+        homePage.classList.add('hidden');
+        addPage.classList.remove('hidden');
     }
 })
 
