@@ -74,6 +74,7 @@ body {
 
 /*---ガラスカード---*/
 .glass-card {
+    animation: fadeInUp 0.5s ease-out;
     background: var(--glass-bg);
     border-radius: 8px;
     border: 1px solid var(--glass-border);
@@ -182,4 +183,15 @@ h3 {
     width: 100% !important;
     height: 100% !important;
     background: rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeInUp { 
+    from {
+        opacity: 0; /*不透明度。最初は透明*/
+        transform: translateY(20px); /*初期位置。本来の位置より下に20px*/
+    }
+    to {
+        opacity: 1; /*最後は不透明*/
+        transform: translateY(0); /*本来の位置に戻る*/
+    }
 }
