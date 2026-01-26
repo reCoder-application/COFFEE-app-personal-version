@@ -136,11 +136,6 @@ saveBtn.addEventListener('click', function() {
 function renderCard(log) {
     /* htmlのカードを作る */
 
-    if (!log.flavor) {
-        console.warn('古いデータ形式のため、スキップします:', log);
-        return;
-    }
-
     // 既存データとの互換性のため、beanNameがあればproductNameとして扱う
     const displayName = log.productName || log.beanName || '名称未設定';
 
