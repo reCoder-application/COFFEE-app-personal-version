@@ -2,11 +2,10 @@
 <html lang="ja">
     <head>
         <meta charset="UTF-8">
-        <!--スマホの横幅表示に合わせるための設定-->
-        resetForm(); // 念のため
-        editingId = null; // 念のため <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <!--font-->
+        <!--スマホの横幅表示に合わせるための設定-->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
         <!--preconnectでドメインに事前接続。ページの読み込み速度向上に寄与-->
         <!--Content Delivery Networkでファイルを使える(フォント)-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,6 +21,7 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href ="styles/modal.css">
     </head>
     <body>
     <div id="app">
@@ -126,9 +126,28 @@
         </main>
     </div>
 
+    <script src="js/modal.js"></script>
     <script src="js/app.js"></script>
+    
     <script>
         lucide.createIcons();
     </script>
+
+    <!---カスタムモーダル-->
+    <div id = "custom-modal" class = "hidden modal-overlay"> <!---backgroundクラスは、モーダルが表示されたときに背景を暗くするためのクラス-->
+        <div class = "glass-card modal-content">
+            <!--タイトル部分。動的に変更したい-->
+            <h3 id = "modal-title">確認</h3>
+        
+            <!---確認メッセージ。動的に変更したい-->
+            <p id = "modal-message">本当に実行しますか？</p>
+
+            <div class = "button-group" style = "display: flex; gap: 10px; margin-top: 20px;">
+                <button id = "modal-cancel" class = "action-btn">キャンセル</button>
+                <button id = "modal-execute" class = "action-btn">実行</button>
+            </div>
+        
+        </div>
+    </div>
 </body>
 </html>

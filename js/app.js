@@ -26,113 +26,6 @@ function syncStorage() {
     localStorage.setItem(coffeeLogs, JSON.stringify(coffeeLogs));
 }
 
-// 追加ボタンを押した時に、入力画面へ遷移する
-addBtn.addEventListener('click', function() {
-    homePage.classList.add('hidden');
-    addPage.classList.remove('hidden');
-    resetForm(); // 念のため
-    editingId = null; // 念のため
-
-})
-
-//　入力のキャンセルボタンを押したら、ホーム画面に遷移する
-cancelBtn.addEventListener('click', function() {
-    addPage.classList.add('hidden');
-    homePage.classList.remove('hidden');
-    resetForm();
-    editingId = null;
-})
-
-
-// スライダーの値をリアルタイムで変更し、画面表示する処理
-slidersIds.forEach(function(id) {
-    const slider = document.getElementById(id);
-    const spanId = id + '-value'; // acidityが取り出されたら、acidity-valueとなる
-    const valueSpan = document.getElementById(spanId); // acidity-valueが取り出されたら、acidity-valueの要素を取得
-    slider.addEventListener('input', function() {
-        valueSpan.textContent = slider.value;
-    })
-})
-
-/* saveBtnにイベントを設定 */
-saveBtn.addEventListener('click', function() {
-
-    //  HTMLから値を取得する
-    // valueプロパティは現在の値を示すためのもの
-    const productName = document.getElementById('product-name').value;
-    const country = document.getElementById('country').value;
-    const farm = document.getElementById('farm').value;
-    const variety = document.getElementById('variety').value;
-    const aroma = document.getElementById('aroma').value;
-    const process = document.getElementById('process').value;
-    const dripper = document.getElementById('dripper').value;
-    const shop = document.getElementById('shop').value;
-    
-    // スライダーの値を取得
-    const acidity = document.getElementById('acidity').value;
-    const bitterness = document.getElementById('bitterness').value;
-    const richness = document.getElementById('richness').value;
-    const sweetness = document.getElementById('sweetness').value;
-    const aromaStrength = document.getElementById('aromaStrength').value;
-
-    if (!productName || !country || !farm || !variety || !aroma) {
-        alert("入力が不完全です。必須項目を入力してください。");
-        return;
-    }
-
-    // 1件分の記録データ
-    const log = {
-        id: Date.now(), // 入力時刻でその記録のIDを管理する
-        productName: productName,  // 商品名（パッケージに書かれている名前）
-        country: country,
-        farm: farm,
-        variety: variety,
-        aroma: aroma,
-        process: process,
-        dripper: dripper,
-        shop: shop,
-        likes: 0,  // いいねが押された回数
-
-        flavor: {
-            acidity: acidity,
-            bitterness: bitterness,
-            richness: richness, // コク
-            sweetness: sweetness,
-            aromaStrength: aromaStrength
-        }
-    };
-
-    // pushで配列にデータを追加
-    if(editingId){
-        const index = coffeeLogs.findIndex(log => log.id === editingId); // editingIdと一致するIDを持つlogを探して、そのindexを取得
-        log.id = editingId; // 既存のIDを使う
-        log.likes = coffeeLogs[index].likes; // いいね数を保持する
-        coffeeLogs[index] = log; // 編集した内容のlogで更新する
-
-        const oldCard = document.querySelector(`[data-id="${editingId}"]`).closest('.glass-card');
-        // カスタムデータ属性である"data-id"で編集対象のカードを特定し、
-        if(oldCard){
-            oldCard.remove();
-        }
-
-        editingId = null;
-        
-    } else {
-    coffeeLogs.push(log);
-    }
-    // ブラウザにデータを保存(localStrage: ブラウザに備わっている簡易的なデータベース)
-    // localStrageは「文字」しか保存できないため
-    // JSON.stringifyでオブジェクトを文字列に変換してから保存している
-    localStorage.setItem('coffeeLogs', JSON.stringify(coffeeLogs));
-    renderCard(log);
-
-    resetForm();
-
-    addPage.classList.add('hidden');
-    homePage.classList.remove('hidden');
-
-}, false);
-
 function renderCard(log) {
     /* htmlのカードを作る */
 
@@ -272,6 +165,114 @@ function resetForm() {
         document.getElementById(id + '-value').textContent = 3;
     });
 }
+
+// 追加ボタンを押した時に、入力画面へ遷移する
+addBtn.addEventListener('click', function() {
+    homePage.classList.add('hidden');
+    addPage.classList.remove('hidden');
+    resetForm(); // 念のため
+    editingId = null; // 念のため
+
+})
+
+//　入力のキャンセルボタンを押したら、ホーム画面に遷移する
+cancelBtn.addEventListener('click', function() {
+    addPage.classList.add('hidden');
+    homePage.classList.remove('hidden');
+    resetForm();
+    editingId = null;
+})
+
+// スライダーの値をリアルタイムで変更し、画面表示する処理
+slidersIds.forEach(function(id) {
+    const slider = document.getElementById(id);
+    const spanId = id + '-value'; // acidityが取り出されたら、acidity-valueとなる
+    const valueSpan = document.getElementById(spanId); // acidity-valueが取り出されたら、acidity-valueの要素を取得
+    slider.addEventListener('input', function() {
+        valueSpan.textContent = slider.value;
+    })
+})
+
+/* saveBtnにイベントを設定 */
+saveBtn.addEventListener('click', function() {
+
+    //  HTMLから値を取得する
+    // valueプロパティは現在の値を示すためのもの
+    const productName = document.getElementById('product-name').value;
+    const country = document.getElementById('country').value;
+    const farm = document.getElementById('farm').value;
+    const variety = document.getElementById('variety').value;
+    const aroma = document.getElementById('aroma').value;
+    const process = document.getElementById('process').value;
+    const dripper = document.getElementById('dripper').value;
+    const shop = document.getElementById('shop').value;
+    
+    // スライダーの値を取得
+    const acidity = document.getElementById('acidity').value;
+    const bitterness = document.getElementById('bitterness').value;
+    const richness = document.getElementById('richness').value;
+    const sweetness = document.getElementById('sweetness').value;
+    const aromaStrength = document.getElementById('aromaStrength').value;
+
+    if (!productName || !country || !farm || !variety || !aroma) {
+        alert("入力が不完全です。必須項目を入力してください。");
+        return;
+    }
+
+    // 1件分の記録データ
+    const log = {
+        id: Date.now(), // 入力時刻でその記録のIDを管理する
+        productName: productName,  // 商品名（パッケージに書かれている名前）
+        country: country,
+        farm: farm,
+        variety: variety,
+        aroma: aroma,
+        process: process,
+        dripper: dripper,
+        shop: shop,
+        likes: 0,  // いいねが押された回数
+
+        flavor: {
+            acidity: acidity,
+            bitterness: bitterness,
+            richness: richness, // コク
+            sweetness: sweetness,
+            aromaStrength: aromaStrength
+        }
+    };
+
+    // pushで配列にデータを追加
+    if(editingId){
+        const index = coffeeLogs.findIndex(log => log.id === editingId); // editingIdと一致するIDを持つlogを探して、そのindexを取得
+        log.id = editingId; // 既存のIDを使う
+        log.likes = coffeeLogs[index].likes; // いいね数を保持する
+        coffeeLogs[index] = log; // 編集した内容のlogで更新する
+
+        const oldCard = document.querySelector(`[data-id="${editingId}"]`).closest('.glass-card');
+        // カスタムデータ属性である"data-id"で編集対象のカードを特定し、
+        if(oldCard){
+            oldCard.remove();
+        }
+
+        editingId = null;
+        
+    } else {
+    coffeeLogs.push(log);
+    }
+    // ブラウザにデータを保存(localStrage: ブラウザに備わっている簡易的なデータベース)
+    // localStrageは「文字」しか保存できないため
+    // JSON.stringifyでオブジェクトを文字列に変換してから保存している
+    localStorage.setItem('coffeeLogs', JSON.stringify(coffeeLogs));
+    renderCard(log);
+
+    resetForm();
+
+    addPage.classList.add('hidden');
+    homePage.classList.remove('hidden');
+
+}, false);
+
+
 
 // 親エリア(list)にクリックイベントを仕掛ける
 cardArea.addEventListener('click', function(e) {
