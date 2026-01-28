@@ -23,3 +23,7 @@ modalExecuteBtn.addEventListener('click', function() {
         closeModal();
     }
 })
+
+modalCancelBtn.addEventListener('click', function() {
+    closeModal();
+})
