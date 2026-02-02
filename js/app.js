@@ -285,9 +285,11 @@ cardArea.addEventListener('click', function(e) {
 
     if (deleteBtn){
 
+        console.log('削除ボタンがクリックされました。');
         // ボタンに埋め込んだIDを読み取る
         // dataset.idは文字としてとれるから、Number()で数値に変換する
         const deleteId = Number(deleteBtn.dataset.id);
+        console.log('削除ID:', deleteId);
         
         openModal(
             "削除の確認",
