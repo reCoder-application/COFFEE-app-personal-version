@@ -23,7 +23,8 @@ body {
 
 .form-group {
     display: flex;
-    align-items: cent1r; /*垂直方向の中央揃え*/
+    align-items: center; /*垂直方向の中央揃え*/
+    justify-content: center;
     margin-bottom: 15px;
     text-align: left; /*ラベルを左寄せにする*/
 }

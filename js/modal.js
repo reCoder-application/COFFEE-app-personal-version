@@ -7,17 +7,17 @@ let currentConfirmAction = null;
 
 function openModal(titleText, messageText, onConfirm) { // onConFirmはコールバック関数
 
-    console.log('openModal が呼ばれました');  // ← 追加
-    console.log('titleText:', titleText);      // ← 追加
-    console.log('messageText:', messageText);  // ← 追加
+    console.log('openModal が呼ばれました');  
+    console.log('titleText:', titleText);      
+    console.log('messageText:', messageText);  
 
     modalTitle.textContent = titleText;
     modalMessage.textContent = messageText;
     currentConfirmAction = onConfirm;
     modalOverlay.classList.remove('hidden');
 
-    console.log('hidden クラスを削除しました');  // ← 追加
-    console.log('modalOverlay の状態:', modalOverlay);  // ← 追加
+    console.log('hidden クラスを削除しました');  
+    console.log('modalOverlay の状態:', modalOverlay);  
 }
 
 function closeModal() {

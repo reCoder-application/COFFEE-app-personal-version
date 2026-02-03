@@ -1,3 +1,6 @@
+// ========================================
+// 1. 変数定義
+// ========================================
 const cardArea = document.getElementById('card-area');
 const saveBtn = document.getElementById('btn-save');
 const addBtn = document.getElementById('add-btn');
@@ -6,29 +9,48 @@ const editBtn = document.getElementById('edit-btn');
 const homePage = document.getElementById('home-page');
 const addPage = document.getElementById('add-page');
 const slidersIds = ['acidity', 'bitterness', 'richness', 'sweetness', 'aromaStrength'];
+
 // コーヒーの記録を保存するためのリスト
 let coffeeLogs = [];
 // 編集中のデータを管理するための変数
 let editingId = null;
 
+// ========================================
+// 2. UI操作関数
+// ========================================
+
+// ページ遷移処理
 function switchPage(pageName) {
-    // ページ遷移用の関数
-        if (pageName === 'add') {
-            homePage.classList.add('hidden');
-            addPage.classList.remove('hidden');
-        } else {
-            addPage.classList.add('hidden');
-            homePage.classList.remove('hidden');
-        }
+    if (pageName === 'add') {
+        homePage.classList.add('hidden');
+        addPage.classList.remove('hidden');
+    } else {
+        addPage.classList.add('hidden');
+        homePage.classList.remove('hidden');
     }
-    
-function syncStorage() { // データを保存する
-    localStorage.setItem(coffeeLogs, JSON.stringify(coffeeLogs));
 }
 
-function renderCard(log) {
-    /* htmlのカードを作る */
+// フォームのリセット処理
+function resetForm() {
+    document.getElementById('product-name').value = "";
+    document.getElementById('country').value = "";
+    document.getElementById('farm').value = "";
+    document.getElementById('variety').value = "";
+    document.getElementById('aroma').value = "";
+    document.getElementById('process').value = "";
+    document.getElementById('dripper').value = "";
+    document.getElementById('shop').value = "";
 
+    slidersIds.forEach(function(id) {
+        const slider = document.getElementById(id);
+        slider.value = 3;
+        document.getElementById(id + '-value').textContent = 3;
+    });
+}
+
+// カードを描画する処理
+
+function renderCard(log) {
     // 既存データとの互換性のため、beanNameがあればproductNameとして扱う
     const displayName = log.productName || log.beanName || '名称未設定';
 
@@ -86,16 +108,16 @@ function renderCard(log) {
     initChart(log.id, log.flavor);
 }
 
+// レーダーチャートの初期化処理
 function initChart(id, flavor) {
-    // レーダーチャートを作成
     const ctx = document.getElementById(`chart-${id}`).getContext('2d');
     new Chart(ctx, {
-        type: 'radar', // レーダーチャート
+        type: 'radar',
         data: {
-            labels: ['Acidity', 'Bitterness', 'Body', 'Sweetness', 'Aroma'], // 各軸のラベル
+            labels: ['Acidity', 'Bitterness', 'Body', 'Sweetness', 'Aroma'],
             datasets: [
                 {
-                    label: 'Flavor Profile', // 凡例に表示される名前
+                    label: 'Flavor Profile',
                     data: [
                         flavor.acidity,
                         flavor.bitterness,
@@ -106,24 +128,24 @@ function initChart(id, flavor) {
                     backgroundColor: 'rgba(212, 175, 55, 0.2)',
                     borderColor: 'rgba(212, 175, 55, 1)',
                     borderWidth: 2,
-                    pointBackgroundColor: '#d4af37' // 点の色
+                    pointBackgroundColor: '#d4af37'
                 }
             ],
         },
         options: {
-            responsive: true, // 親要素に合わせてサイズを自動調整する
-            maintainAspectRatio: false, // サイズ変更の際に、元のキャンバスのアスペクト比(width/height)を維持する
+            responsive: true,
+            maintainAspectRatio: false,
             scales: {
-                r: { // r:レーダーチャート専用の軸設定
+                r: {
                     min: 0,
                     max: 5,
-                    ticks: { // 軸の目盛り（数値や文字）の表示形式や範囲を細かくカスタマイズする
+                    ticks: {
                         stepSize: 1,
                         color: '#a0a0a0',
                         backdropColor: 'transparent',
                         display: false
                     },
-                    grid: { // グラフ背景の軸線やメモリ線の表示・色・太さ・間隔をカスタム
+                    grid: {
                         color: 'rgba(255, 255, 255, 0.1)'
                     },
                     pointLabels: {
@@ -133,13 +155,13 @@ function initChart(id, flavor) {
                         }
                     },
                     angleLines: {
-                        color: 'rgba(255, 255, 255, 0.1)'  // 放射線の色
+                        color: 'rgba(255, 255, 255, 0.1)'
                     }
                 }
             },
             plugins: {
                 legend: {
-                    display: false // 凡例を非表示
+                    display: false
                 }
             }
         }
@@ -148,56 +170,46 @@ function initChart(id, flavor) {
     lucide.createIcons();
 }
 
-function resetForm() {
-    // フォームの入力欄をすべて空にする。
-    document.getElementById('product-name').value = "";
-    document.getElementById('country').value = "";
-    document.getElementById('farm').value = "";
-    document.getElementById('variety').value = "";
-    document.getElementById('aroma').value = "";
-    document.getElementById('process').value = "";
-    document.getElementById('dripper').value = "";
-    document.getElementById('shop').value = "";
+// ========================================
+// 3. データ処理関数
+// ========================================
 
-    slidersIds.forEach(function(id) {
-        const slider = document.getElementById(id);
-        slider.value = 3;
-        document.getElementById(id + '-value').textContent = 3;
-    });
+// LocalStorageへの保存処理
+function syncStorage() {
+    localStorage.setItem('coffeeLogs', JSON.stringify(coffeeLogs));
 }
 
-// 追加ボタンを押した時に、入力画面へ遷移する
+// ========================================
+// 4. イベントリスナー
+// ========================================
+
+// 追加ボタン：新規入力画面へ遷移
 addBtn.addEventListener('click', function() {
-    homePage.classList.add('hidden');
-    addPage.classList.remove('hidden');
-    resetForm(); // 念のため
-    editingId = null; // 念のため
-
-})
-
-//　入力のキャンセルボタンを押したら、ホーム画面に遷移する
-cancelBtn.addEventListener('click', function() {
-    addPage.classList.add('hidden');
-    homePage.classList.remove('hidden');
+    switchPage('add');
     resetForm();
     editingId = null;
-})
+});
 
-// スライダーの値をリアルタイムで変更し、画面表示する処理
+// キャンセルボタン：ホーム画面へ戻る
+cancelBtn.addEventListener('click', function() {
+    switchPage('home');
+    resetForm();
+    editingId = null;
+});
+
+// スライダーの値をリアルタイムで更新
 slidersIds.forEach(function(id) {
     const slider = document.getElementById(id);
-    const spanId = id + '-value'; // acidityが取り出されたら、acidity-valueとなる
-    const valueSpan = document.getElementById(spanId); // acidity-valueが取り出されたら、acidity-valueの要素を取得
+    const spanId = id + '-value';
+    const valueSpan = document.getElementById(spanId);
     slider.addEventListener('input', function() {
         valueSpan.textContent = slider.value;
-    })
-})
+    });
+});
 
-/* saveBtnにイベントを設定 */
+// 保存ボタン：データの追加・更新処理
 saveBtn.addEventListener('click', function() {
-
-    //  HTMLから値を取得する
-    // valueプロパティは現在の値を示すためのもの
+    // HTMLから値を取得
     const productName = document.getElementById('product-name').value;
     const country = document.getElementById('country').value;
     const farm = document.getElementById('farm').value;
@@ -214,15 +226,16 @@ saveBtn.addEventListener('click', function() {
     const sweetness = document.getElementById('sweetness').value;
     const aromaStrength = document.getElementById('aromaStrength').value;
 
+    // バリデーション
     if (!productName || !country || !farm || !variety || !aroma) {
         alert("入力が不完全です。必須項目を入力してください。");
         return;
     }
 
-    // 1件分の記録データ
+    // 1件分の記録データを作成
     const log = {
-        id: Date.now(), // 入力時刻でその記録のIDを管理する
-        productName: productName,  // 商品名（パッケージに書かれている名前）
+        id: Date.now(),
+        productName: productName,
         country: country,
         farm: farm,
         variety: variety,
@@ -230,134 +243,96 @@ saveBtn.addEventListener('click', function() {
         process: process,
         dripper: dripper,
         shop: shop,
-        likes: 0,  // いいねが押された回数
-
+        likes: 0,
         flavor: {
             acidity: acidity,
             bitterness: bitterness,
-            richness: richness, // コク
+            richness: richness,
             sweetness: sweetness,
             aromaStrength: aromaStrength
         }
     };
 
-    // pushで配列にデータを追加
-    if(editingId){
-        const index = coffeeLogs.findIndex(log => log.id === editingId); // editingIdと一致するIDを持つlogを探して、そのindexを取得
-        log.id = editingId; // 既存のIDを使う
-        log.likes = coffeeLogs[index].likes; // いいね数を保持する
-        coffeeLogs[index] = log; // 編集した内容のlogで更新する
+    // 編集モードか新規追加モードかで処理を分岐
+    if (editingId) {
+        // 編集モード
+        const index = coffeeLogs.findIndex(log => log.id === editingId);
+        log.id = editingId;
+        log.likes = coffeeLogs[index].likes;
+        coffeeLogs[index] = log;
 
         const oldCard = document.querySelector(`[data-id="${editingId}"]`).closest('.glass-card');
-        // カスタムデータ属性である"data-id"で編集対象のカードを特定し、
-        if(oldCard){
+        if (oldCard) {
             oldCard.remove();
         }
-
         editingId = null;
-        
     } else {
-    coffeeLogs.push(log);
+        // 新規追加モード
+        coffeeLogs.push(log);
     }
-    // ブラウザにデータを保存(localStrage: ブラウザに備わっている簡易的なデータベース)
-    // localStrageは「文字」しか保存できないため
-    // JSON.stringifyでオブジェクトを文字列に変換してから保存している
-    localStorage.setItem('coffeeLogs', JSON.stringify(coffeeLogs));
+
+    // LocalStorageに保存
+    syncStorage();
     renderCard(log);
-
     resetForm();
-
-    addPage.classList.add('hidden');
-    homePage.classList.remove('hidden');
-
+    switchPage('home');
 }, false);
 
 
 
-// 親エリア(list)にクリックイベントを仕掛ける
+// カードエリアのイベント委譲（削除、いいね、編集）
 cardArea.addEventListener('click', function(e) {
-
-    // クリックされたものが削除ボタンか、いいねボタンかを確認する
-    // 対象のHTMLタグのオブジェクトが渡される
     const deleteBtn = e.target.closest('.delete-btn');
-    const likeBtn  = e.target.closest('.like-btn');
-    const editBtn  = e.target.closest('.edit-btn');
+    const likeBtn = e.target.closest('.like-btn');
+    const editBtn = e.target.closest('.edit-btn');
 
-    if (deleteBtn){
-
-        console.log('削除ボタンがクリックされました。');
-        // ボタンに埋め込んだIDを読み取る
-        // dataset.idは文字としてとれるから、Number()で数値に変換する
+    // 削除ボタンの処理
+    if (deleteBtn) {
         const deleteId = Number(deleteBtn.dataset.id);
-        console.log('削除ID:', deleteId);
         
         openModal(
             "削除の確認",
             "本当に削除しますか？",
             function() {
-                // 配列から削除対象のデータを削除し、残ったデータで新しい配列を作る。
                 coffeeLogs = coffeeLogs.filter(log => log.id !== deleteId);
-
-                // 最新の状態になった配列を保存し、上書きする
-                localStorage.setItem('coffeeLogs', JSON.stringify(coffeeLogs));
-
-                // data-id属性が&{deleteId}のカードの.glass-card(CSSセレクタ)に一致するものを代入する。
-                const cardToDelete = document.querySelector(`[data-id="${deleteId}"]`).closest('.glass-card');
+                syncStorage();
                 
-                cardToDelete.remove(); // localStorageからデータを削除するメソッド
+                const cardToDelete = document.querySelector(`[data-id="${deleteId}"]`).closest('.glass-card');
+                cardToDelete.remove();
             }
         );
     }
 
-    // いいねの処理
-    else if(likeBtn) { // likeボタンが押された場合
+    // いいねボタンの処理
+    else if (likeBtn) {
         const countSpan = likeBtn.querySelector('.like-count');
-
-        // countSpan変数のテキストコンテントを指定することで、今の数字を取得して、数値に変換
         let count = parseInt(countSpan.textContent);
 
-        // まだ「いいね」してないか判定 (activeクラスを持ってるか？)
-        // likeBtn変数が持つクラスのリストに'active'というクラスが入っているかどうかを確認
-        // likeBtn.classList: action-btn like-btn
+        // いいね状態のトグル
         if (!likeBtn.classList.contains('active')) {
-            // まだいいねしていない場合:"active"クラスを追加して、CSSスタイルを適用できるようにする
             likeBtn.classList.add('active');
-            count ++;
-        }
-        else {
+            count++;
+        } else {
             likeBtn.classList.remove('active');
-            count --;
+            count--;
         }
 
         countSpan.textContent = count;
 
-        // likeBtn(押されたボタン)kからIDを取り出して、数値に変換する
+        // データの更新と保存
         const likeId = Number(likeBtn.dataset.id);
-        // targetLog: いいねしたいIDを持つデータのオブジェクトが代入される
-        /*「logのid(log.id)」と「今取得したlikeId」が等しいデータを1つ見つけてほしい。
-        　　見つけたら、targetLogという変数に入れる*/
         const targetLog = coffeeLogs.find(log => log.id === likeId);
-
-        if(targetLog) {
+        if (targetLog) {
             targetLog.likes = count;
         }
-
-        localStorage.setItem('coffeeLogs', JSON.stringify(coffeeLogs));
-
-        console.log('保存完了！ ID:' + likeId + ' のいいね数:' + count);
+        syncStorage();
     }
 
-    else if(editBtn){
-    // ここに編集ボタンが押されたときの処理を書く
-    // ヒント: editBtn.dataset.id でIDを取得できます
-    // ヒント: editCard()という関数を呼び出す
-
-        // 編集したいデータのidを取得
+    // 編集ボタンの処理
+    else if (editBtn) {
         const targetId = Number(editBtn.dataset.id);
-
-        // 配列から指定したidのデータを見つけて、取り出す
         const targetLog = coffeeLogs.find(log => log.id === targetId);
-        if(!targetLog){
+        if (!targetLog) {
             return;
         }
 
@@ -378,28 +353,25 @@ cardArea.addEventListener('click', function(e) {
         document.getElementById('sweetness').value = targetLog.flavor.sweetness;
         document.getElementById('aromaStrength').value = targetLog.flavor.aromaStrength;
 
-        // スライダーの数値の表示
         document.getElementById('acidity-value').textContent = targetLog.flavor.acidity;
         document.getElementById('bitterness-value').textContent = targetLog.flavor.bitterness;
         document.getElementById('richness-value').textContent = targetLog.flavor.richness;
         document.getElementById('sweetness-value').textContent = targetLog.flavor.sweetness;
         document.getElementById('aromaStrength-value').textContent = targetLog.flavor.aromaStrength;
 
-        editingId = targetId; // 今現在、編集中なのか、新規追加のデータを入力中なのかを判定する変数
-
-        homePage.classList.add('hidden');
-        addPage.classList.remove('hidden');
+        editingId = targetId;
+        switchPage('add');
     }
-})
+});
 
+// ========================================
+// 5. 初期化処理
+// ========================================
+
+// ページ読み込み時にLocalStorageからデータを復元
 const savedLogs = localStorage.getItem('coffeeLogs');
-
 if (savedLogs) {
-    // 文字(JSON)を配列のリストに戻す
     coffeeLogs = JSON.parse(savedLogs);
-
-    // リストから要素を一つづつ取り出して、カードを表示する。
-    // 後で入力する項目が増える可能性があるから、forEachを使う
     coffeeLogs.forEach(function(log) {
         renderCard(log);
     });
