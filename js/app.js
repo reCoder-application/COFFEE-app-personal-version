@@ -1,6 +1,3 @@
-// ========================================
-// 1. 変数定義
-// ========================================
 const cardArea = document.getElementById('card-area');
 const saveBtn = document.getElementById('btn-save');
 const addBtn = document.getElementById('add-btn');
@@ -15,10 +12,7 @@ let coffeeLogs = [];
 // 編集中のデータを管理するための変数
 let editingId = null;
 
-// ========================================
-// 2. UI操作関数
-// ========================================
-
+// UI操作関数
 // ページ遷移処理
 function switchPage(pageName) {
     if (pageName === 'add') {
@@ -170,18 +164,16 @@ function initChart(id, flavor) {
     lucide.createIcons();
 }
 
-// ========================================
-// 3. データ処理関数
-// ========================================
+
+// データ処理関数
 
 // LocalStorageへの保存処理
 function syncStorage() {
     localStorage.setItem('coffeeLogs', JSON.stringify(coffeeLogs));
 }
 
-// ========================================
-// 4. イベントリスナー
-// ========================================
+
+// イベントリスナー群
 
 // 追加ボタン：新規入力画面へ遷移
 addBtn.addEventListener('click', function() {
