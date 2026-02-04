@@ -160,7 +160,23 @@ h3 {
 
 /*id(add-btn)で指定して、スタイルを適用*/
 #add-btn {
-    
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 30px;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--primary);
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#add-btn active {
+    transform: scale(0.95);
 }
 
 .action-btn {
