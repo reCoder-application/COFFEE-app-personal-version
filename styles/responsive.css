@@ -1,0 +1,16 @@
+/*メディアクエリ(スマートフォン用)*/
+
+@media screen and (max-width: 767px){
+    .glass-header {
+        padding: 12px 16px;
+    }
+
+    .logo {
+        font-size: 20px;
+        gap: 10px;
+    }
+
+    .mein-content {
+        
+    }
+}
