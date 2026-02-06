@@ -10,7 +10,76 @@
         gap: 10px;
     }
 
-    .mein-content {
-        
+    .main-content {
+        padding: 0 12px;
     }
+
+    .glass-card {
+        padding: 16px;
+    }
+
+    .form-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .form-group label {
+        width: auto;
+        min-width: auto;
+    }
+
+    
+    input[type = "text"] {
+        font-size: 16px; /*iOSの自動ズームを防止*/
+    }
+
+    /*スライダーのコンテナ調整*/
+    input[type = "range"] {
+        flex: 1;
+        margin-right: 8px;
+    }
+
+    /*タイトルのフォントサイズ調整*/
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    h3 {
+        font-size: 1rem;
+    }
+
+    .meta-info {
+        font-size: 0.8rem;
+    }
+
+    .chart-container {
+        height: 220px;
+    }
+
+    .action-btn {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    #add-btn {
+        width: 56px;
+        height: 56px;
+        bottom: 16px;
+        right: 16px;
+        font-size: 28px;
+    }
+
+    /*キャンセル、保存ボタンを縦積み*/
+    .button-group {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .button-group .action-btn{
+        width: 100%;
+        justify-content: center;
+        padding: 12px;
+    }
+
 }
