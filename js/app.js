@@ -43,6 +43,7 @@ function resetForm() {
     document.getElementById('process').value = "";
     document.getElementById('dripper').value = "";
     document.getElementById('shop').value = "";
+    document.getElementById('memo').value = "";
 
     slidersIds.forEach(function(id) {
         const slider = document.getElementById(id);
@@ -64,34 +65,43 @@ function renderCard(log) {
                     <div style="display: flex; justify-content: space-between; align-items: center;">
                         <h3>${displayName}</h3>
                     </div>
-
+                    
+                    <!---購入日--->
                     <div class = "meta-info">
                         <span><i data-lucide = "calendar"></i> ${logDate(log.id)}</span>
                     </div>
 
+                    <!---生産国および農園--->
                     <div class="meta-info">
                         <span><i data-lucide="map-pin"></i> ${log.country}</span>
                         <span>/</span>
                         <span><i data-lucide="tree-deciduous"></i>${log.farm}</span>
                     </div>
 
+                    <!---品種--->
                     <div class="meta-info" style="margin-top: 4px;">
                         <span><i data-lucide="sprout"></i> ${log.variety}</span>
                     </div>
 
+                    <!---プロセスと使ったドリッパー--->
                     <div class="meta-info" style="margin-top: 4px;">
                         <span><i data-lucide="droplets"></i> ${log.process || '未記録'}</span>
                         <span>/</span>
                         <span><i data-lucide="filter"></i> ${log.dripper || '未登録'}</span>
                     </div>
 
+                    <!---購入店--->
                     <div class="meta-info" style="margin-top: 4px;">
                         <span><i data-lucide="shopping-bag"></i> ${log.shop || '未登録'}</span>
+                    </div>
+
+                    <div class = "meta-info" style = "margin-top: 4px;">
+                        <span><i data-lucide = "message-square"></i> ${log.aroma || '未登録'}</span>
                     </div>
                 </div>
             </div>
 
-            <p class="notes">"${log.aroma}"</p>
+            <p class="notes"><i data-lucide="sticky-note"></i> ${log.note || 'メモなし'}</p>
             <div class = "chart-container">
                 <canvas id = "chart-${log.id}"></canvas>
             </div>
@@ -102,8 +112,9 @@ function renderCard(log) {
                     <span>${log.isFavorite ? 'お気に入り' : 'お気に入りに追加'}</span>
                 </button>
 
-                <button class = "action-btn edit-btn " data-id = "${log.id}"> 
+                <button class = "action-btn edit-btn" data-id = "${log.id}"> 
                     <i data-lucide = "edit"></i>
+                </button>
                 <button class="action-btn delete-btn" data-id = "${log.id}">
                     <i data-lucide="trash-2"></i>
                 </button>
@@ -225,6 +236,7 @@ saveBtn.addEventListener('click', function() {
     const process = document.getElementById('process').value;
     const dripper = document.getElementById('dripper').value;
     const shop = document.getElementById('shop').value;
+    const note = document.getElementById('memo').value;
     
     // スライダーの値を取得
     const acidity = document.getElementById('acidity').value;
@@ -358,6 +370,7 @@ cardArea.addEventListener('click', function(e) {
         document.getElementById('process').value = targetLog.process;
         document.getElementById('dripper').value = targetLog.dripper;
         document.getElementById('shop').value = targetLog.shop;
+        document.getElementById('memo').value = targetLog.note || '';
 
         // スライダーの値と表示を設定
         document.getElementById('acidity').value = targetLog.flavor.acidity;

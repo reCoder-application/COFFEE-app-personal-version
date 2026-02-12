@@ -135,9 +135,24 @@ h3 {
 
 
 .notes {
+    margin: 12px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
     color: #ddd;
-    font-style: italic;
+    font-size: 0.9rem;
     line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.notes i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    color: var(--primary);
+    width: 16px;
+    height: 16px;
 }
 
 
