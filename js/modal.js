@@ -6,18 +6,10 @@ const modalExecuteBtn = document.getElementById('modal-execute');
 let currentConfirmAction = null;
 
 function openModal(titleText, messageText, onConfirm) { // onConFirmはコールバック関数
-
-    console.log('openModal が呼ばれました');  
-    console.log('titleText:', titleText);      
-    console.log('messageText:', messageText);  
-
     modalTitle.textContent = titleText;
     modalMessage.textContent = messageText;
     currentConfirmAction = onConfirm;
     modalOverlay.classList.remove('hidden');
-
-    console.log('hidden クラスを削除しました');  
-    console.log('modalOverlay の状態:', modalOverlay);  
 }
 
 function closeModal() {
