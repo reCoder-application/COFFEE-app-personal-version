@@ -145,10 +145,10 @@ function initChart(id, flavor) {
                         flavor.sweetness,
                         flavor.aromaStrength
                     ],
-                    backgroundColor: 'rgba(60, 149, 45, 0.2)',
-                    borderColor: 'rgb(52, 210, 96)',
+                    backgroundColor: 'rgba(153, 208, 144, 0.2)',
+                    borderColor: 'rgb(168, 216, 181)',
                     borderWidth: 2,
-                    pointBackgroundColor: '#d4af37'
+                    pointBackgroundColor: 'white'
                 }
             ],
         },
