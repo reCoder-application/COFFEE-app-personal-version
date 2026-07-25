@@ -1,0 +1,14 @@
+@charset "UTF-8";
+
+/* このページ内の文字はすべてserif(明朝体系)フォントで表示する */
+#specialty-coffee {
+    font-family: serif;
+}
+
+#specialty-coffee h1{
+    text-align: center;
+}
+
+#specialty-coffee h3{
+    text-align: center;
+}

@@ -1,8 +1,16 @@
 @charset "UTF-8";
 #top-desc {
-    font-family: serif;
+    
     font-size: 16px;
     top: 0;
+}
+
+#description {
+    font-family: serif;
+}
+
+#description h3{
+    text-align: center;  
 }
 
 #top-desc h3{
@@ -11,4 +19,10 @@
 
 #top-desc p{
     margin: 0;
+}
+
+/* 「使い方」セクションの手順リスト(ol)も、既存のul/liと同じ余白・字下げに揃える */
+#description ol {
+    padding-left: 25px;
+    margin-bottom: 20px;
 }

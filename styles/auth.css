@@ -10,6 +10,7 @@
 .auth-container h2 {
     color: var(--primary);
     margin-bottom: 24px;
+    font-family: serif
 }
 
 .auth-form {
@@ -53,24 +54,5 @@
 .auth-switch a:hover {
     text-decoration: underline;
 }
-.error-message {
-    color: #ff4444;
-    font-size: 0.9rem;
-    margin-top: 8px;
-    display: none; /* エラーがある時だけJavaScriptで表示する */
-}
-/* ヘッダーのログアウトボタン用 */
-#logout-btn {
-    background: none;
-    border: 1px solid var(--glass-border);
-    color: var(--text-muted);
-    padding: 6px 12px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 0.85rem;
-    display: none; /* 初期状態は非表示（ログイン後に表示） */
-}
-#logout-btn:hover {
-    color: white;
-    border-color: white;
-}
+/* エラーメッセージとログアウトボタンのスタイルは、
+   ログイン画面以外のページでも使うため main.css に移動した */

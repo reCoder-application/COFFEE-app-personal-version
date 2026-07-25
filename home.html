@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "description" content = "登録したコーヒー豆の一覧">
+        <title>ホーム | reCoder</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" >
+
+        <link rel = "icon" href = "images/logo.png">
+
+        <!--アイコン表示用のライブラリ-->
+        <script src="https://unpkg.com/lucide@latest"></script>
+
+        <!--jQueryの読み込み(ヘッダーの開閉メニューで使う)-->
+        <script
+        src="https://code.jquery.com/jquery-4.0.0.min.js"
+        integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
+        crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="styles/main.css?v=5">
+        <link rel="stylesheet" href="styles/responsive.css?v=4">
+    </head>
+    <body>
+    <div id="app">
+        <header class="glass-header">
+            <!--開閉メニュー：メニューボタンを押すと左からドロワーがスライドインする -->
+            <div class = "submenu">
+                <button class = "action-btn menu-btn" id = "menu-box">
+                    <i data-lucide="menu"></i>
+                </button>
+                <!-- 背景の暗幕。ドロワーを開いたときに表示され、タップで閉じる -->
+                <div class = "drawer-overlay" id = "drawer-overlay"></div>
+                <!-- 左から出てくるドロワー本体。CSSの left でアニメーションする -->
+                <nav class = "submenu-content" id = "submenu-content">
+                    <div class = "drawer-header">
+                        <span class = "drawer-title font-english">MENU</span>
+                        <button class = "drawer-close" id = "drawer-close">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                    <a href = "home.html" class = "submenu-item">ホーム</a>
+                    <a href = "description.html" class = "submenu-item">ご利用ガイド</a>
+                    <a href = "specialty-coffee.html" class = "submenu-item">スペシャルティコーヒーとは</a>
+                    <a href = "privacy-policy.html" class = "submenu-item">プライバシーポリシー</a>
+                </nav>
+            </div>
+            <div class="logo">
+                <span>reCoder</span>
+            </div>
+            <button id = "logout-btn">Log Out</button>
+        </header>
+
+        <main class="main-content">
+            <!--ログイン確認とデータの読み込みが終わるまで表示しておく-->
+            <p id="page-loading" class="page-loading">読み込んでいます...</p>
+
+            <!--読み込みが終わったらJavaScriptがhiddenを外して表示する-->
+            <div id="page-content" class="hidden">
+                <!--検索・絞り込み・並び替えのバー-->
+                <div class="glass-card filter-bar">
+                    <div class="search-row">
+                        <i data-lucide="search"></i>
+                        <!--type="search"にすると、ブラウザが検索用の入力欄として扱う-->
+                        <input type="search" id="search-input" placeholder="商品名・生産国・農園・品種で検索">
+                        <button type="button" id="search-clear" class="action-btn" title="検索条件をリセット">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+
+                    <div class="filter-row">
+                        <label class="filter-field">
+                            <span>焙煎度</span>
+                            <!--選択肢は登録済みデータから自動で作るため、ここには「すべて」だけ置く-->
+                            <select id="filter-roast">
+                                <option value="">すべて</option>
+                            </select>
+                        </label>
+
+                        <label class="filter-field">
+                            <span>精製方法</span>
+                            <select id="filter-process">
+                                <option value="">すべて</option>
+                            </select>
+                        </label>
+
+                        <label class="filter-field">
+                            <span>並び替え</span>
+                            <select id="sort-select">
+                                <option value="newest">新しい順</option>
+                                <option value="oldest">古い順</option>
+                                <option value="name-asc">商品名（昇順）</option>
+                                <option value="name-desc">商品名（降順）</option>
+                                <option value="brew-desc">抽出回数が多い順</option>
+                            </select>
+                        </label>
+
+                        <label class="filter-check">
+                            <input type="checkbox" id="filter-favorite">
+                            <span>お気に入りのみ</span>
+                        </label>
+                    </div>
+
+                    <p id="result-count" class="result-count"></p>
+                </div>
+
+                <!--豆のカードはJavaScriptから流し込む-->
+                <div id="card-area"></div>
+            </div>
+
+            <!--新しい豆を登録する画面へ移動するボタン-->
+            <button id="add-btn" title="コーヒー豆を登録する">
+                +
+            </button>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebaseの初期化設定とデータの読み書き -->
+    <script src="js/firebase-config.js?v=2"></script>
+    <script src="js/api.js?v=4"></script>
+
+    <!-- 全ページ共通の処理。各ページのJSより前に読み込む -->
+    <script src="js/common.js?v=1"></script>
+
+    <!-- このページ専用の処理 -->
+    <script src="js/home.js?v=1"></script>
+
+    <!-- ヘッダーの開閉メニュー用(jQueryアニメーション) -->
+    <script src="js/menu.js?v=3"></script>
+</body>
+</html>

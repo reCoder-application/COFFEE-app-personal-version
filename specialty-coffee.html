@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang = "ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "description" content = "スペシャルティコーヒーとは">
+
+        <title>スペシャルティコーヒーとは</title>
+
+        <meta name = "viewport" content = "width=device-width, initial-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" >
+        <link rel="stylesheet" href="styles/main.css?v=5">
+        <link rel="stylesheet" href="styles/privacy-policy.css?v=3">
+        <link rel="stylesheet" href="styles/specialty-coffee.css">
+
+        <link rel = "icon" href = "/images/logo.png">
+
+        <script src="https://unpkg.com/lucide@latest"></script>
+
+          <!--jQueryの読み込み-->
+        <script
+        src="https://code.jquery.com/jquery-4.0.0.min.js"
+        integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
+        crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+        <div id = "specialty-coffee">
+            <header class="glass-header">
+                <div class = "submenu">
+                    <button class = "action-btn menu-btn" id = "menu-box">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <!-- 背景の暗幕。ドロワーを開いたときに表示され、タップで閉じる -->
+                    <div class = "drawer-overlay" id = "drawer-overlay"></div>
+                    <!-- 左から出てくるドロワー本体 -->
+                    <nav class = "submenu-content" id = "submenu-content">
+                        <div class = "drawer-header">
+                            <span class = "drawer-title">MENU</span>
+                            <button class = "drawer-close" id = "drawer-close">
+                                <i data-lucide="x"></i>
+                            </button>
+                        </div>
+                        <a href = "home.html" class = "submenu-item">ホーム</a>
+                        <a href = "description.html" class = "submenu-item">ご利用ガイド</a>
+                        <a href = "specialty-coffee.html" class = "submenu-item">スペシャルティコーヒーとは</a>
+                        <a href = "privacy-policy.html" class = "submenu-item">プライバシーポリシー</a>
+                    </nav>
+                </div>
+                <div class="logo">
+                    <span>reCoder</span>
+                </div>
+                <button id = "logout-btn">Log Out</button>
+            </header>
+
+            <h1>スペシャルティコーヒーとは</h1>
+
+            <h3>定義</h3>
+            <p>&emsp;Specialty Coffee Association of Japan(SCAJ)によるスペシャルティコーヒーの定義とは、生産国において栽培管理から収穫、選別などの各工程が適切になされ、且つ欠点豆の混入が極めて少ないコーヒーのことをいいます。</p>
+
+            <h3>求められる要件</h3>
+            <p>&emsp;スペシャルティコーヒーに求められる要件は豆そのものの品質だけではありません。その豆が持つ素晴らしい風味を劣化なく焙煎し、適切な抽出がなされ、生産地の特徴的な風味特性が表現された、いわば「From seed to cup」を体現するカップを作るところまで求められます。</p>
+
+            <h3>reCoderの活用について</h3>
+            <p>&emsp;reCoderは、こうしたスペシャルティコーヒーが持つ豆ごとの個性を記録し、味わいの変化や好みの傾向を振り返るためのアプリケーションです。スペシャルティコーヒーは同じ国の同じ農園から収穫された同じ品種の豆でも、お店の焙煎方法や抽出によって見せる表情は全く異なります。
+                &emsp;スペシャルティコーヒーを体系的に分析・学ぶためには情報の記録し、いつでも振り返られるという単純な行為と環境は、とても重要な意義を持つと作成者は考えております。なお、「reCoder」の使い方については<a href = "description.html">ご利用ガイド</a>もあわせてご覧ください。</p>
+        </div>
+
+        <!-- Firebase SDK（このページはログアウトだけ使うので、本体と認証の2つだけでよい） -->
+        <!-- CDN(外部配信)のファイルはURLにバージョンが含まれるので ?v= は不要 -->
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
+        <!-- Firebaseの初期化設定 -->
+        <script src="js/firebase-config.js?v=2"></script>
+
+        <!-- メニュー開閉用のJS -->
+        <script src="js/menu.js?v=3"></script>
+
+        <!-- このページ専用のログアウト処理 -->
+        <!-- 注意: home用の auth.js は home画面専用の要素を参照しており、このページで読むとエラーになるため使わない -->
+        <script>
+            document.getElementById('logout-btn').addEventListener('click', function () {
+                firebase.auth().signOut().then(function () {
+                    // ログアウトしたらホーム（ログイン画面）へ戻す
+                    window.location.href = 'index.html';
+                });
+            });
+        </script>
+
+        <!-- アイコンの描画 -->
+        <script>
+            lucide.createIcons();
+        </script>
+    </body>
+</html>

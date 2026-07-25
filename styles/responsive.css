@@ -31,18 +31,29 @@
     }
 
     
-    input[type = "text"] {
+    input[type = "text"],
+    input[type = "search"],
+    input[type = "number"],
+    input[type = "date"],
+    textarea {
         font-size: 16px; /*iOSの自動ズームを防止*/
     }
 
-    /* スライダーの数値を中央に配置 */
-    .form-group span {
-        display: block;
-        width: 100%;
-        text-align: center;
-        font-weight: 600;
-        color: rgb(151, 145, 145);
-        font-size: 1.1rem;
+    /* スライダーは項目名を上、つまみを下に並べて指で操作しやすくする */
+    .slider-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+    }
+
+    .slider-group > label {
+        width: auto;
+        min-width: auto;
+    }
+
+    /* 項目名と数値は同じ行に並べたままにする */
+    .slider-group > label span {
+        font-size: 1rem;
     }
 
     /* お気に入りボタンのテキストを非表示（アイコンのみ） */
@@ -92,6 +103,44 @@
         padding: 12px;
     }
 
+    /*検索・絞り込みの各項目を縦積みにする*/
+    .filter-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .filter-field {
+        flex: 1 1 auto;
+    }
+
+    .filter-check {
+        padding-bottom: 0;
+    }
+
+    /*詳細ページの基本情報は、ラベルと値を縦に並べる*/
+    .detail-meta-row {
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .detail-meta-label {
+        width: auto;
+    }
+
+    /*抽出記録を追加するボタンを横幅いっぱいにして押しやすくする*/
+    .section-header {
+        align-items: stretch;
+    }
+
+    .section-header .primary-btn {
+        justify-content: center;
+    }
+
+    .brew-card {
+        padding: 14px;
+    }
+
 }
 
 /*メディアクエリ(タブレット用)*/
@@ -117,13 +166,15 @@
         min-width: 120px;
     }
 
-    /* スライダーの数値は横並びに戻す */
-    .form-group span {
-        display: inline;
-        width: auto;
-        text-align: left;
-        margin-top: 0;
-        margin-left: 8px;
+    /* スライダーは項目名とつまみを横並びに戻す */
+    .slider-group {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .slider-group > label {
+        width: 80px;
+        min-width: 80px;
     }
 
     /* 追加ボタンのサイズ調整 */
