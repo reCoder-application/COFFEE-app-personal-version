@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "description" content = "コーヒー豆の詳細と抽出記録">
+        <title>豆の詳細 | reCoder</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" >
+
+        <link rel = "icon" href = "images/logo.png">
+
+        <!--アイコン表示用のライブラリ-->
+        <script src="https://unpkg.com/lucide@latest"></script>
+
+        <!--味わいのグラフを描くためのライブラリ-->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!--jQueryの読み込み(ヘッダーの開閉メニューで使う)-->
+        <script
+        src="https://code.jquery.com/jquery-4.0.0.min.js"
+        integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
+        crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="styles/main.css?v=5">
+        <link rel="stylesheet" href="styles/modal.css?v=2">
+        <link rel="stylesheet" href="styles/responsive.css?v=4">
+    </head>
+    <body>
+    <div id="app">
+        <header class="glass-header">
+            <!--開閉メニュー：メニューボタンを押すと左からドロワーがスライドインする -->
+            <div class = "submenu">
+                <button class = "action-btn menu-btn" id = "menu-box">
+                    <i data-lucide="menu"></i>
+                </button>
+                <!-- 背景の暗幕。ドロワーを開いたときに表示され、タップで閉じる -->
+                <div class = "drawer-overlay" id = "drawer-overlay"></div>
+                <!-- 左から出てくるドロワー本体。CSSの left でアニメーションする -->
+                <nav class = "submenu-content" id = "submenu-content">
+                    <div class = "drawer-header">
+                        <span class = "drawer-title font-english">MENU</span>
+                        <button class = "drawer-close" id = "drawer-close">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                    <a href = "home.html" class = "submenu-item">ホーム</a>
+                    <a href = "description.html" class = "submenu-item">ご利用ガイド</a>
+                    <a href = "specialty-coffee.html" class = "submenu-item">スペシャルティコーヒーとは</a>
+                    <a href = "privacy-policy.html" class = "submenu-item">プライバシーポリシー</a>
+                </nav>
+            </div>
+            <div class="logo">
+                <span>reCoder</span>
+            </div>
+            <button id = "logout-btn">Log Out</button>
+        </header>
+
+        <main class="main-content">
+            <p id="page-loading" class="page-loading">読み込んでいます...</p>
+
+            <div id="page-content" class="hidden detail-view">
+                <a href="home.html" class="action-btn back-btn">
+                    <i data-lucide="arrow-left"></i>
+                    <span>一覧へ戻る</span>
+                </a>
+
+                <!--豆の基本情報-->
+                <div class="glass-card">
+                    <h2 id="detail-name"></h2>
+
+                    <!--基本情報はJavaScriptから流し込む-->
+                    <div id="detail-meta"></div>
+
+                    <p class="notes" id="detail-note"></p>
+
+                    <h3 class="detail-section-title">味わい（抽出記録の平均）</h3>
+                    <div class="chart-container" id="detail-chart-area">
+                        <canvas id="detail-chart"></canvas>
+                    </div>
+                    <p id="detail-chart-empty" class="empty-message hidden">抽出記録を追加すると、味わいのグラフが表示されます。</p>
+
+                    <div class="card-footer">
+                        <button type="button" class="action-btn favorite-btn" id="detail-favorite">
+                            <i data-lucide="star"></i>
+                            <span>お気に入りに追加</span>
+                        </button>
+                        <button type="button" class="action-btn" id="detail-edit">
+                            <i data-lucide="edit"></i>
+                            <span>豆情報を編集</span>
+                        </button>
+                        <button type="button" class="action-btn delete-btn" id="detail-delete">
+                            <i data-lucide="trash-2"></i>
+                            <span>削除</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!--抽出記録の一覧-->
+                <div class="glass-card brew-section">
+                    <div class="section-header">
+                        <h3>抽出記録 <span id="brew-count" class="count-badge">0件</span></h3>
+                        <button type="button" id="add-brew-btn" class="action-btn primary-btn">
+                            <i data-lucide="plus"></i>
+                            <span>抽出記録を追加</span>
+                        </button>
+                    </div>
+                    <div id="brew-list"></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!---カスタムモーダル(削除の確認に使う)-->
+    <div id = "custom-modal" class = "hidden modal-overlay">
+        <div class = "glass-card modal-content">
+            <!--タイトルと本文はJavaScriptから差し替える-->
+            <h3 id = "modal-title" style = "color: white;">確認</h3>
+            <p id = "modal-message">本当に削除しますか？</p>
+
+            <div class = "button-group">
+                <button id = "modal-cancel" class = "action-btn">キャンセル</button>
+                <button id = "modal-execute" class = "action-btn modal-execute-btn">実行</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 削除確認のモーダル -->
+    <script src="js/modal.js?v=2"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebaseの初期化設定とデータの読み書き -->
+    <script src="js/firebase-config.js?v=2"></script>
+    <script src="js/api.js?v=4"></script>
+
+    <!-- 全ページ共通の処理。各ページのJSより前に読み込む -->
+    <script src="js/common.js?v=1"></script>
+
+    <!-- このページ専用の処理 -->
+    <script src="js/detail.js?v=2"></script>
+
+    <!-- ヘッダーの開閉メニュー用(jQueryアニメーション) -->
+    <script src="js/menu.js?v=3"></script>
+</body>
+</html>

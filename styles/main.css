@@ -38,9 +38,14 @@ body {
 }
 
 input[type = "text"],
-input[type = "range"] {
+input[type = "search"],
+input[type = "number"],
+input[type = "date"],
+input[type = "range"],
+textarea {
     background: rgba(255,255,255,0.05);
-    border-width: 1px solid var(--glass-border);
+    /* border-width は太さ専用のため solid や色を書いても無効になる。border でまとめて指定する */
+    border: 1px solid var(--glass-border);
     border-radius: 4px;
     color: var(--text-main);
     padding: 12px;
@@ -49,9 +54,20 @@ input[type = "range"] {
     flex: 1;
 }
 
+textarea {
+    min-height: 80px;
+    resize: vertical; /*縦方向だけリサイズできるようにする*/
+    line-height: 1.5;
+}
+
 /*テキスト入力フィールドがクリックで選択され、フォーカスされた状態のスタイル*/
-input[type = "text"]:focus {
+input[type = "text"]:focus,
+input[type = "search"]:focus,
+input[type = "number"]:focus,
+input[type = "date"]:focus,
+textarea:focus {
     border-color: var(--primary);
+    outline: none;
 }
 
 /*入力項目のラベルの幅を固定して揃える*/
@@ -177,7 +193,8 @@ input[type = "text"]:focus {
     color: var(--primary);
 }
 
-#main-content {
+/* HTMLでは class="main-content" と書いているため、クラスセレクタ(.)で指定する */
+.main-content {
     max-width: 600px;
     margin: 20px auto;  /*上下: 20px 左右:auto*/
     padding: 0 16px; 
@@ -326,22 +343,69 @@ h3 {
     margin-left: 4px;
 }
 
-#btn-cancel {
- 
+/* 保存・キャンセルボタン。豆のフォームと抽出記録のフォームで共通して使う */
+.cancel-btn {
     background-color: #ff4444;
     color: white;
     border-radius: 16px;
+    padding: 10px 20px;
 }
 
-#btn-save {
+.save-btn {
     background: var(--primary);
     color: white;
     border-radius: 16px;
+    padding: 10px 20px;
+}
+
+.cancel-btn:hover,
+.save-btn:hover {
+    color: white;
+    opacity: 0.85;
+}
+
+/* 保存中はボタンを押せなくするので、押せないことが見た目でも分かるようにする */
+.save-btn:disabled {
+    cursor: default;
+    opacity: 0.6;
 }
 
 /* 画面を隠すためのクラス */
 .hidden {
     display: none !important;
+}
+
+/* ログイン確認とデータの読み込みが終わるまで表示しておく案内文 */
+.page-loading {
+    padding: 40px 16px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+/* 入力内容の不備や通信エラーを知らせる文。すべてのフォームで使う */
+.error-message {
+    color: #ff4444;
+    font-size: 0.9rem;
+    margin-top: 8px;
+    display: none; /* エラーがある時だけJavaScriptで表示する */
+}
+
+/* ヘッダーのログアウトボタン */
+#logout-btn {
+    background: none;
+    border: 1px solid var(--glass-border);
+    color: var(--text-muted);
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: 'Outfit', sans-serif;
+}
+
+#logout-btn:hover {
+    color: white;
+    border-color: white;
 }
 
 .chart-container { 
@@ -367,4 +431,453 @@ h3 {
         opacity: 1; /*最後は不透明*/
         transform: translateY(0); /*本来の位置に戻る*/
     }
+}
+
+
+/*=======================================
+  検索・絞り込み・並び替えのバー
+=======================================*/
+
+.filter-bar {
+    text-align: left;
+}
+
+.search-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-row i {
+    color: var(--text-muted);
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0; /*入力欄が伸びてもアイコンは縮ませない*/
+}
+
+.search-row input[type = "search"] {
+    /*ブラウザが標準で付ける装飾を消して、他の入力欄と見た目を揃える*/
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+#search-clear i {
+    width: 16px;
+    height: 16px;
+}
+
+.filter-row {
+    display: flex;
+    flex-wrap: wrap; /*入り切らないときは折り返す*/
+    align-items: flex-end;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.filter-field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1 1 140px; /*最低140pxを確保しつつ、余白に応じて伸縮する*/
+}
+
+.filter-field > span {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.filter-field select {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 4px;
+    color: var(--text-main);
+    padding: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+.filter-field select:focus {
+    border-color: var(--primary);
+    outline: none;
+}
+
+/*プルダウンを開いたときの選択肢の色(Windowsなどでは背景が白のままになるため指定する)*/
+.filter-field select option {
+    background: #1a1a1a;
+    color: var(--text-main);
+}
+
+.filter-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding-bottom: 10px;
+}
+
+.filter-check input[type = "checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary); /*チェックが付いたときの色*/
+    cursor: pointer;
+}
+
+.result-count {
+    margin: 12px 0 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/*データが無いときや検索結果が0件のときの案内文*/
+.empty-message {
+    margin: 0;
+    padding: 24px 16px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.7;
+}
+
+
+/*=======================================
+  一覧のカード
+=======================================*/
+
+.bean-card {
+    text-align: left;
+}
+
+.bean-card-body {
+    cursor: pointer; /*カード本体をクリックすると詳細ページへ移動する*/
+}
+
+.bean-card-body h3 {
+    margin-bottom: 8px;
+    font-family: serif;
+}
+
+.bean-card .meta-info {
+    margin-top: 4px;
+}
+
+/*ボタン内のアイコンが小さすぎないように、カードと詳細ページの中だけ大きさを指定する*/
+.bean-card .action-btn i,
+.brew-card .action-btn i,
+.detail-view .action-btn i,
+.back-btn i {
+    width: 16px;
+    height: 16px;
+}
+
+.detail-btn span,
+.bean-card .favorite-btn span {
+    font-size: 0.85rem;
+}
+
+
+/*=======================================
+  味わいのバー(グラフ描画ライブラリを使わずCSSだけで表現する)
+=======================================*/
+
+.flavor-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 14px 0;
+}
+
+.flavor-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flavor-bar-label {
+    width: 40px;
+    flex-shrink: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.flavor-bar-track {
+    flex: 1;
+    height: 8px;
+    border-radius: 999px; /*十分大きな値を指定すると両端がきれいな半円になる*/
+    background: rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+}
+
+.flavor-bar-fill {
+    display: block;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+    transition: width 0.3s ease;
+}
+
+.flavor-bar-value {
+    width: 28px;
+    flex-shrink: 0;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--text-main);
+}
+
+.flavor-empty {
+    margin: 14px 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+
+/*=======================================
+  詳細ページ
+=======================================*/
+
+/* 一覧へ戻るリンク。<a>タグなので下線を消してボタンらしい見た目にする */
+.back-btn {
+    margin-bottom: 12px;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+/* 詳細ページ(detail.html)の本文。左寄せにする */
+.detail-view {
+    text-align: left;
+}
+
+#detail-name {
+    margin: 0 0 16px;
+    font-family: serif;
+    color: var(--primary);
+    font-size: 1.4rem;
+}
+
+.detail-meta-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    font-size: 0.9rem;
+}
+
+.detail-meta-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 110px;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.detail-meta-label i {
+    width: 14px;
+    height: 14px;
+}
+
+.detail-meta-value {
+    color: var(--text-main);
+    word-break: break-word; /*長い文字列でも枠からはみ出さないようにする*/
+}
+
+.detail-section-title {
+    margin-top: 24px;
+    font-size: 0.95rem;
+    font-family: serif;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.section-header h3 {
+    margin: 0;
+    font-family: serif;
+}
+
+.count-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    font-size: 0.75rem;
+}
+
+.primary-btn {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: var(--primary);
+    color: #2a1f17;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.primary-btn:hover {
+    background: var(--primary-dark);
+    color: #fff;
+}
+
+
+/*=======================================
+  抽出記録のカード
+=======================================*/
+
+.brew-section {
+    text-align: left;
+}
+
+.brew-card {
+    padding: 16px;
+    margin-bottom: 12px;
+    border: 1px solid var(--glass-border);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.brew-card:last-child {
+    margin-bottom: 0;
+}
+
+.brew-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.brew-date {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+.brew-date i {
+    width: 14px;
+    height: 14px;
+    color: var(--primary);
+}
+
+.brew-legacy-badge {
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text-muted);
+    font-size: 0.7rem;
+}
+
+.brew-specs {
+    margin-top: 10px;
+    gap: 12px;
+}
+
+.brew-text {
+    margin: 10px 0 0;
+    padding: 10px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #ddd;
+    font-size: 0.85rem;
+    font-family: serif;
+    line-height: 1.6;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.brew-text i {
+    margin-top: 2px;
+    flex-shrink: 0;
+    width: 14px;
+    height: 14px;
+    color: var(--primary);
+}
+
+.brew-card-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--glass-border);
+}
+
+.brew-card-footer .action-btn span {
+    font-size: 0.85rem;
+}
+
+
+/*=======================================
+  入力フォーム(bean-form.html / brew-form.html)
+=======================================*/
+
+.input-form h2 {
+    margin: 0 0 16px;
+    font-family: serif;
+    color: var(--primary);
+}
+
+/*味わいのスライダー5本をまとめる箱。ラベルの右側で縦に並べる*/
+.slider-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/*スライダー1本分(項目名・現在値・つまみ)*/
+.slider-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/*「酸味 3」のような項目名。.form-group label の幅指定を上書きする*/
+.slider-group > label {
+    width: 70px;
+    min-width: 70px;
+    margin-right: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/*現在の値は色を変えて見つけやすくする*/
+.slider-group > label span {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.slider-group input[type = "range"] {
+    padding: 0;
+    accent-color: var(--primary); /*つまみとバーの色*/
+    cursor: pointer;
+}
+
+
+/*=======================================
+  フォームの補足説明
+=======================================*/
+
+.form-hint {
+    margin: 0 0 20px;
+    padding: 10px 12px;
+    border-left: 3px solid var(--primary);
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    text-align: left;
 }

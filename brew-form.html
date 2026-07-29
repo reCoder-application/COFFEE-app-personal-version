@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "description" content = "コーヒーの抽出記録を登録・編集する">
+        <title>抽出記録 | reCoder</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" >
+
+        <link rel = "icon" href = "images/logo.png">
+
+        <!--アイコン表示用のライブラリ-->
+        <script src="https://unpkg.com/lucide@latest"></script>
+
+        <!--jQueryの読み込み(ヘッダーの開閉メニューで使う)-->
+        <script
+        src="https://code.jquery.com/jquery-4.0.0.min.js"
+        integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
+        crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="styles/main.css?v=5">
+        <link rel="stylesheet" href="styles/responsive.css?v=4">
+    </head>
+    <body>
+    <div id="app">
+        <header class="glass-header">
+            <!--開閉メニュー：メニューボタンを押すと左からドロワーがスライドインする -->
+            <div class = "submenu">
+                <button class = "action-btn menu-btn" id = "menu-box">
+                    <i data-lucide="menu"></i>
+                </button>
+                <!-- 背景の暗幕。ドロワーを開いたときに表示され、タップで閉じる -->
+                <div class = "drawer-overlay" id = "drawer-overlay"></div>
+                <!-- 左から出てくるドロワー本体。CSSの left でアニメーションする -->
+                <nav class = "submenu-content" id = "submenu-content">
+                    <div class = "drawer-header">
+                        <span class = "drawer-title font-english">MENU</span>
+                        <button class = "drawer-close" id = "drawer-close">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                    <a href = "home.html" class = "submenu-item">ホーム</a>
+                    <a href = "description.html" class = "submenu-item">ご利用ガイド</a>
+                    <a href = "specialty-coffee.html" class = "submenu-item">スペシャルティコーヒーとは</a>
+                    <a href = "privacy-policy.html" class = "submenu-item">プライバシーポリシー</a>
+                </nav>
+            </div>
+            <div class="logo">
+                <span>reCoder</span>
+            </div>
+            <button id = "logout-btn">Log Out</button>
+        </header>
+
+        <main class="main-content">
+            <p id="page-loading" class="page-loading">読み込んでいます...</p>
+
+            <div id="page-content" class="hidden">
+                <div class="glass-card input-form">
+                    <!--新規追加か編集かによって、JavaScriptが見出しを差し替える-->
+                    <h2 id="brew-form-title">New Brew</h2>
+                    <!--どの豆の記録かをJavaScriptから表示する-->
+                    <p class="form-hint" id="brew-form-bean"></p>
+
+                    <div class="form-group">
+                        <label>抽出日・Date</label>
+                        <input type="date" id="brew-date">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ドリッパー・Dripper</label>
+                        <input type="text" id="brew-dripper" placeholder="使用したドリッパー">
+                    </div>
+
+                    <div class="form-group">
+                        <label>豆の量（g）・Dose</label>
+                        <!--type="number"にすると数字用のキーボードが出る。stepは入力できる刻み幅-->
+                        <input type="number" id="brew-dose" placeholder="例: 15" min="0" step="0.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>湯量（g）・Water</label>
+                        <input type="number" id="brew-water" placeholder="例: 240" min="0" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>湯温（℃）・Temperature</label>
+                        <input type="number" id="brew-temp" placeholder="例: 92" min="0" max="100" step="1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>抽出時間・Time</label>
+                        <input type="text" id="brew-time" placeholder="例: 2:30">
+                    </div>
+
+                    <div class="form-group">
+                        <label>レシピ・Recipe</label>
+                        <textarea id="brew-recipe" placeholder="注ぎ方の手順など"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>味わい・Flavor</label>
+                        <!--1〜5の5段階で評価するスライダー。idはデータの項目名と揃えている-->
+                        <div class="slider-list">
+                            <div class="slider-group">
+                                <label>酸味 <span id="acidity-value">3</span></label>
+                                <input type="range" id="acidity" min="1" max="5" value="3">
+                            </div>
+                            <div class="slider-group">
+                                <label>苦味 <span id="bitterness-value">3</span></label>
+                                <input type="range" id="bitterness" min="1" max="5" value="3">
+                            </div>
+                            <div class="slider-group">
+                                <label>コク <span id="richness-value">3</span></label>
+                                <input type="range" id="richness" min="1" max="5" value="3">
+                            </div>
+                            <div class="slider-group">
+                                <label>甘味 <span id="sweetness-value">3</span></label>
+                                <input type="range" id="sweetness" min="1" max="5" value="3">
+                            </div>
+                            <div class="slider-group">
+                                <label>香り <span id="aromaStrength-value">3</span></label>
+                                <input type="range" id="aromaStrength" min="1" max="5" value="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>メモ・Note</label>
+                        <textarea id="brew-note" placeholder="気づいたことや次回の改善点"></textarea>
+                    </div>
+
+                    <p id="brew-form-error" class="error-message"></p>
+
+                    <div class="button-group">
+                        <button type="button" id="brew-cancel" class="action-btn cancel-btn">キャンセル</button>
+                        <button type="button" id="brew-save" class="action-btn save-btn">保存</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebaseの初期化設定とデータの読み書き -->
+    <script src="js/firebase-config.js?v=2"></script>
+    <script src="js/api.js?v=4"></script>
+
+    <!-- 全ページ共通の処理。各ページのJSより前に読み込む -->
+    <script src="js/common.js?v=1"></script>
+
+    <!-- このページ専用の処理 -->
+    <script src="js/brew-form.js?v=1"></script>
+
+    <!-- ヘッダーの開閉メニュー用(jQueryアニメーション) -->
+    <script src="js/menu.js?v=3"></script>
+</body>
+</html>

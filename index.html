@@ -14,28 +14,24 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" >
 
-        <link rel = "icon" href = "/images/logo.png">
+        <link rel = "icon" href = "images/logo.png">
 
         <!---icons-->
         <!--コーヒーカップやごみ箱などのアイコンを表示するためのライブラリ-->
         <!--アイコンを取り出すには、<i data-lucide="coffee"></i>のように書く-->
         <script src="https://unpkg.com/lucide@latest"></script>
 
-        <!--レーダーチャートを作る用。ライブラリ名は"chart.js"-->
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-        <!--jQueryの読み込み-->
+        <!--jQueryの読み込み(ヘッダーの開閉メニューで使う)-->
         <script
         src="https://code.jquery.com/jquery-4.0.0.min.js"
         integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
         crossorigin="anonymous"></script>
-        
+
         <!-- ?v=1 はキャッシュ対策(キャッシュバスティング)。-->
         <!-- ファイルの中身を更新したら v の数字を増やすと、ブラウザが「新しいファイル」と判断して読み直す。-->
-        <link rel="stylesheet" href="styles/main.css?v=3">
-        <link rel="stylesheet" href ="styles/modal.css?v=2">
-        <link rel="stylesheet" href = "styles/responsive.css?v=2">
-        <link rel="stylesheet" href = "styles/auth.css?v=2">
+        <link rel="stylesheet" href="styles/main.css?v=5">
+        <link rel="stylesheet" href="styles/responsive.css?v=4">
+        <link rel="stylesheet" href="styles/auth.css?v=3">
     </head>
     <body>
     <div id="app">
@@ -55,7 +51,7 @@
                             <i data-lucide="x"></i>
                         </button>
                     </div>
-                    <a href = "index.html" class = "submenu-item">ホーム</a>
+                    <a href = "home.html" class = "submenu-item">ホーム</a>
                     <a href = "description.html" class = "submenu-item">ご利用ガイド</a>
                     <a href = "specialty-coffee.html" class = "submenu-item">スペシャルティコーヒーとは</a>
                     <a href = "privacy-policy.html" class = "submenu-item">プライバシーポリシー</a>
@@ -64,14 +60,13 @@
             <div class="logo">
                 <span>reCoder</span>
             </div>
-            <button id = "logout-btn">Log Out</button>
         </header>
 
         <main class="main-content">
-
+            <!--ログイン・新規登録の画面。ログイン済みの場合はhome.htmlへ自動で移動する-->
             <section id = "auth-page" class = "auth-container">
                 <div class = "glass-card">
-                    <h2 id = "auth-title font-english ">Welcome to reCoder.</h2>
+                    <h2 id = "auth-title">Welcome to reCoder.</h2>
                     <div class = "auth-form">
                         <input type = "email" id="auth-email" placeholder="メールアドレス">
                         <input type = "password" id = "auth-password" placeholder="パスワード(6文字以上)">
@@ -84,161 +79,27 @@
                     </div>
                 </div>
             </section>
-            
-            <section id="home-page" class = "hidden">
-                <div id="card-area"></div>
-                
-                <button id="add-btn" style="cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2);">
-                    +<data value=""></data>
-                </button>
-            </section>
-            
-
-            <!--新しいコーヒーログの追加画面-->
-            <section id="add-page" class="hidden">
-                <div class="glass-card input-form">
-                    <h2>New Coffee Entry</h2>
-                        
-                    <div class="form-group">
-                        <label>商品名・Product name</label>
-                        <input type="text" id="product-name" placeholder="商品名(必須)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>生産国名・Country</label>
-                        <input type="text" id="country" placeholder="生産国名(必須)">
-                    </div>
-
-                    <div class="form-group">
-                        <label>プロセス・Process</label>
-                        <input type="text" id="process" placeholder="プロセス(必須)">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>品種・Variety</label>
-                        <input type="text" id="variety" placeholder="品種(必須)">
-                    </div>
-
-                    <div class="form-group">
-                        <label>焙煎度・Roast level</label>
-                        <input type="text" id="roastLevel" placeholder="焙煎度">
-                    </div>
-                   
-                    <div class="form-group">
-                        <label>風味・Flavor</label>
-                        <input type="text" id="aroma" placeholder="風味(必須)">
-                    </div>
-                   
-                    <div class = "form-group">
-                        <label>農園・Farm</label>
-                        <input type="text" id = "farm" placeholder="農園">
-                    </div>
-                    
-                    <div class = "form-group">
-                        <label>ドリッパー・Dripper</label>
-                        <input type = "text" id = "dripper" placeholder="ドリッパー">
-                    </div>
-
-                    <div class="form-group">
-                        <label>レシピ・Recipe</label>
-                        <input type="text" id = "recipe" placeholder="レシピ">
-                    </div>
-
-                    <div class = "form-group">
-                        <label>購入店・Store name</label>
-                        <input type = "text" id = "shop" placeholder="購入店">
-                    </div>
-
-                    <div class = "form-group">
-                        <label>メモ・Note</label>
-                        <textarea id = "memo" placeholder="その他メモ"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label>酸味・Acidity</label>
-                        <input type="range" id = "acidity" min="1" value = "3" max="5" >
-                        <span id = "acidity-value">3</span>
-                    </div>
-
-                    <div class = "form-group">
-                        <label>苦味・Bitterness</label>
-                        <input type="range" id = "bitterness" min="1" value="3" max="5"> 
-                        <span id = "bitterness-value">3</span>
-                    </div>
-
-                    <div class = "form-group">
-                        <label>コク・Body</label>
-                        <input type="range" id = "richness" min="1" value="3" max="5">
-                        <span id = "richness-value">3</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>甘味・Sweetness</label>
-                        <input type="range" id="sweetness" min="1" value="3" max="5">
-                        <span id = "sweetness-value">3</span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>香り・Aroma strength</label>
-                        <input type="range" id="aromaStrength" min="1" value="3" max="5">
-                        <span id = "aromaStrength-value">3</span>
-                    </div>
-                    
-                    <div class="button-group" style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-                        <button id="btn-cancel" class="action-btn">キャンセル</button>
-                        <button id="btn-save" class="action-btn" style="background: var(--primary); color: white;">保存</button>
-                    </div>
-                </div>
-            </section>
-
         </main>
     </div>
-
-    <!---カスタムモーダル-->
-    <div id = "custom-modal" class = "hidden modal-overlay"> <!---backgroundクラスは、モーダルが表示されたときに背景を暗くするためのクラス-->
-        <div class = "glass-card modal-content">
-            <!--タイトル部分。動的に変更したい-->
-            <h3 id = "modal-title" style = "color: white;">確認</h3>
-        
-            <!---確認メッセージ。動的に変更したい-->
-            <p id = "modal-message">本当に削除しますか？</p>
-
-            <div class = "button-group">
-                <button id = "modal-cancel" class = "action-btn">キャンセル</button>
-                <button id = "modal-execute" class = "action-btn modal-execute-btn">実行</button>
-            </div>
-        
-        </div>
-    </div>
-
-    <!-- 自分で書いたJSには ?v=1 を付ける(キャッシュ対策)。-->
-    <!-- 中身を更新したら v の数字を増やすと、ブラウザが古いコードを使わず読み直す。-->
-    <!-- 【修正】閉じタグが </scrip> になっていたため、以降のFirebase読み込みが壊れてログイン不可になっていた。</script> に修正 -->
-    <script src="js/modal.js?v=2"></script>
 
     <!-- Firebase SDK -->
     <!-- Firebaseの機能を使うためのライブラリをgoogleのサーバーからダウンロード-->
     <!-- CDN(外部配信)のファイルはURLにバージョンが含まれるので ?v= は不要 -->
-     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
-     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <!-- このページはログインだけを行うので、firestore(データベース)は読み込まない -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
-    <!-- Firebase設定とAPI -->
+    <!-- Firebaseの初期化設定 -->
     <script src="js/firebase-config.js?v=2"></script>
-    <script src="js/auth.js?v=2"></script>
-    <script src="js/api.js?v=2"></script>
 
-    <script src="js/app.js?v=2"></script>
+    <!-- このページ専用のログイン処理 -->
+    <script src="js/auth.js?v=4"></script>
 
-    <!-- 【追加】ヘッダーの開閉メニュー用(jQueryアニメーション) -->
+    <!-- ヘッダーの開閉メニュー用(jQueryアニメーション) -->
     <script src="js/menu.js?v=3"></script>
 
-    
-    
     <script>
         lucide.createIcons();
     </script>
-
-    
 </body>
 </html>

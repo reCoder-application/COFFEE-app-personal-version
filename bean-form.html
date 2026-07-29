@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name = "description" content = "コーヒー豆の情報を登録・編集する">
+        <title>豆の登録 | reCoder</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" >
+
+        <link rel = "icon" href = "images/logo.png">
+
+        <!--アイコン表示用のライブラリ-->
+        <script src="https://unpkg.com/lucide@latest"></script>
+
+        <!--jQueryの読み込み(ヘッダーの開閉メニューで使う)-->
+        <script
+        src="https://code.jquery.com/jquery-4.0.0.min.js"
+        integrity="sha256-OaVG6prZf4v69dPg6PhVattBXkcOWQB62pdZ3ORyrao="
+        crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="styles/main.css?v=5">
+        <link rel="stylesheet" href="styles/responsive.css?v=4">
+    </head>
+    <body>
+    <div id="app">
+        <header class="glass-header">
+            <!--開閉メニュー：メニューボタンを押すと左からドロワーがスライドインする -->
+            <div class = "submenu">
+                <button class = "action-btn menu-btn" id = "menu-box">
+                    <i data-lucide="menu"></i>
+                </button>
+                <!-- 背景の暗幕。ドロワーを開いたときに表示され、タップで閉じる -->
+                <div class = "drawer-overlay" id = "drawer-overlay"></div>
+                <!-- 左から出てくるドロワー本体。CSSの left でアニメーションする -->
+                <nav class = "submenu-content" id = "submenu-content">
+                    <div class = "drawer-header">
+                        <span class = "drawer-title font-english">MENU</span>
+                        <button class = "drawer-close" id = "drawer-close">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                    <a href = "home.html" class = "submenu-item">ホーム</a>
+                    <a href = "description.html" class = "submenu-item">ご利用ガイド</a>
+                    <a href = "specialty-coffee.html" class = "submenu-item">スペシャルティコーヒーとは</a>
+                    <a href = "privacy-policy.html" class = "submenu-item">プライバシーポリシー</a>
+                </nav>
+            </div>
+            <div class="logo">
+                <span>reCoder</span>
+            </div>
+            <button id = "logout-btn">Log Out</button>
+        </header>
+
+        <main class="main-content">
+            <p id="page-loading" class="page-loading">読み込んでいます...</p>
+
+            <div id="page-content" class="hidden">
+                <div class="glass-card input-form">
+                    <!--新規登録か編集かによって、JavaScriptが見出しを差し替える-->
+                    <h2 id="form-title">New Coffee Bean</h2>
+                    <p class="form-hint">豆そのものの情報を登録します。淹れ方や味わいは、保存後の詳細ページから「抽出記録」として追加できます。</p>
+
+                    <div class="form-group">
+                        <label>商品名・Product name</label>
+                        <input type="text" id="product-name" placeholder="商品名(必須)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>生産国名・Country</label>
+                        <input type="text" id="country" placeholder="生産国名(必須)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>プロセス・Process</label>
+                        <input type="text" id="process" placeholder="プロセス(必須)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>品種・Variety</label>
+                        <input type="text" id="variety" placeholder="品種(必須)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>焙煎度・Roast level</label>
+                        <input type="text" id="roastLevel" placeholder="焙煎度(例: 中煎り)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>風味・Flavor</label>
+                        <input type="text" id="aroma" placeholder="風味(必須)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>農園・Farm</label>
+                        <input type="text" id="farm" placeholder="農園">
+                    </div>
+
+                    <div class="form-group">
+                        <label>購入店・Store name</label>
+                        <input type="text" id="shop" placeholder="購入店">
+                    </div>
+
+                    <div class="form-group">
+                        <label>メモ・Note</label>
+                        <textarea id="memo" placeholder="その他メモ"></textarea>
+                    </div>
+
+                    <p id="form-error" class="error-message"></p>
+
+                    <div class="button-group">
+                        <button type="button" id="btn-cancel" class="action-btn cancel-btn">キャンセル</button>
+                        <button type="button" id="btn-save" class="action-btn save-btn">保存</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
+    <!-- Firebaseの初期化設定とデータの読み書き -->
+    <script src="js/firebase-config.js?v=2"></script>
+    <script src="js/api.js?v=4"></script>
+
+    <!-- 全ページ共通の処理。各ページのJSより前に読み込む -->
+    <script src="js/common.js?v=1"></script>
+
+    <!-- このページ専用の処理 -->
+    <script src="js/bean-form.js?v=1"></script>
+
+    <!-- ヘッダーの開閉メニュー用(jQueryアニメーション) -->
+    <script src="js/menu.js?v=3"></script>
+</body>
+</html>

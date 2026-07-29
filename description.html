@@ -10,16 +10,15 @@
         <meta name="viewport" content = "width=device-width, initial-scale=1">
 
         <link rel = "icon" href = "images/logo.png">
-        <link rel="stylesheet" href="styles/main.css?v=3">
 
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Philosopher&display=swap" >
-        <link rel="stylesheet" href="styles/main.css?v=3">
+        <link rel="stylesheet" href="styles/main.css?v=5">
         <link rel="stylesheet" href="styles/privacy-policy.css?v=3">
-        <link rel="stylesheet" href="styles/description.css">
+        <link rel="stylesheet" href="styles/description.css?v=2">
         <script src="https://unpkg.com/lucide@latest"></script>
 
           <!--jQueryの読み込み-->
@@ -48,7 +47,7 @@
                                 <i data-lucide="x"></i>
                             </button>
                         </div>
-                        <a href = "index.html" class = "submenu-item">ホーム</a>
+                        <a href = "home.html" class = "submenu-item">ホーム</a>
                         <a href = "description.html" class = "submenu-item">ご利用ガイド</a>
                         <a href = "specialty-coffee.html" class = "submenu-item">スペシャルティコーヒーとは</a>
                         <a href = "privacy-policy.html" class = "submenu-item">プライバシーポリシー</a>
@@ -86,6 +85,14 @@
                         コーヒーの淹れ方はプアオーバーから始まりサイフォンやエスプレッソなど、非常に多用であり、器具の違いによって同じ豆でもその味わいは全く異なります。
                         さらにはドリッパーの種類やお湯を注ぐタイミングや時間、温度でも味わいは大きく変化します。ある抽出におけるレシピの記録は味わいの再現を行うために欠かせません。
                     </li>
+                    <li><strong>1つの豆に複数の抽出記録</strong><br>
+                        同じ豆でも、淹れ方を変えれば味わいは変わります。本アプリケーションでは豆の情報と抽出の記録を分けて保存するため、
+                        1つの豆に対して抽出記録を何件でも積み重ねることができます。詳細ページでは、それらの平均値をグラフで確認できます。
+                    </li>
+                    <li><strong>検索・絞り込み・並び替え</strong><br>
+                        ホーム画面では、商品名や生産国・農園・品種による検索に加えて、焙煎度や精製方法での絞り込み、
+                        登録日や抽出回数などでの並び替えができます。記録が増えても目的の豆をすぐに見つけられます。
+                    </li>
                     <li><strong>お気に入り登録</strong><br>
                         特に気に入った一杯には★マークでお気に入り登録ができます。記録が増えてきても、ホーム画面からすぐに見つけ出すことができます。
                     </li>
@@ -99,10 +106,12 @@
                 <h3>使い方</h3>
                 <ol>
                     <li>メールアドレスとパスワードでアカウントを作成し、ログインします。</li>
-                    <li>ホーム画面右下の「＋」ボタンから、新しいコーヒーの記録を追加します。</li>
-                    <li>商品名や生産国、味わいの評価などを入力して「保存」すると、カードとして一覧に並びます。</li>
+                    <li>ホーム画面右下の「＋」ボタンから、コーヒー豆の情報（商品名・生産国・品種・焙煎度など）を登録します。</li>
+                    <li>保存すると、その豆の詳細ページが開きます。</li>
+                    <li>詳細ページの「抽出記録を追加」から、淹れ方（ドリッパー・豆の量・湯量・湯温・抽出時間）と味わいの評価を記録します。</li>
+                    <li>ホーム画面に戻ると、登録した豆がカードとして一覧に並びます。カードを押すといつでも詳細ページを開けます。</li>
                 </ol>
-                <p>&emsp;保存したカードは、いつでも編集・削除・お気に入り登録ができます。</p>
+                <p>&emsp;豆の情報も抽出記録も、いつでも編集・削除ができます。お気に入り登録は、ホーム画面のカードと詳細ページのどちらからでも行えます。</p>
             </div>
 
             <div id = "see-more">
