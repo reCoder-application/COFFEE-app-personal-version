@@ -78,7 +78,7 @@ function renderBeanInfo() {
 // 2. 味わいのグラフ
 // ========================================
 
-// 抽出記録の平均値をレーダーチャートで描く
+// 抽出記録の平均値を棒グラフで描く
 function renderChart() {
     const flavor = getBeanFlavor(currentBean);
 
@@ -106,26 +106,42 @@ function renderChart() {
 
     const ctx = document.getElementById('detail-chart').getContext('2d');
     detailChart = new Chart(ctx, {
-        type: 'radar',
+        type: 'bar', // bar = 棒グラフ
         data: {
             labels: labels,
             datasets: [{
                 label: '味わい',
                 data: values,
-                backgroundColor: 'rgba(139, 94, 60, 0.25)',
-                borderColor: 'rgba(139, 94, 60, 0.9)',
-                borderWidth: 2,
-                pointBackgroundColor: 'rgba(139, 94, 60, 1)'
+                backgroundColor: 'rgba(212, 163, 115, 0.6)', // キャラメル色(半透明)
+                borderColor: '#d4a373',
+                borderWidth: 1,
+                borderRadius: 4 // 棒の角を少し丸める
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                r: {
+                // 縦軸(y)：味の強さ 0〜5
+                y: {
                     min: 0,
                     max: 5,
-                    ticks: { stepSize: 1 }
+                    ticks: {
+                        stepSize: 1,
+                        color: '#a99d8e'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                // 横軸(x)：味の項目名
+                x: {
+                    ticks: {
+                        color: '#f3ece3'
+                    },
+                    grid: {
+                        display: false // 縦線を消してすっきりさせる
+                    }
                 }
             },
             plugins: {
