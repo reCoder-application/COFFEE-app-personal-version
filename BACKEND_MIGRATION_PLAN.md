@@ -160,18 +160,24 @@ users（コレクション）
                     └── ...
 ```
 
-**セキュリティルール：**
+**セキュリティルール：**（最新の内容は `firestore.rules` を参照）
 ```
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /users/{userId}/logs/{logId} {
+    match /users/{userId}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }
 ```
 ↑「ログインしている本人だけが、自分のデータを読み書きできる」というルール
+
+`{document=**}` は「その下の階層すべて」を表す再帰ワイルドカード。
+セキュリティルールは下の階層へ自動的には引き継がれないため、これを付けずに
+`match /users/{userId}/logs/{logId}` と書くと、その下のサブコレクション
+（抽出記録 `logs/{logId}/brews/{brewId}` など）が許可の記述が無い状態＝
+アクセス拒否になり、詳細ページで `permission-denied` が発生する。
 
 ---
 
